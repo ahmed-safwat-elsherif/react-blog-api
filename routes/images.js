@@ -47,7 +47,9 @@ router.post("/user", authenticate, upload.single("image"), async (req, res) => {
     let image = await Image.findOne({ filename: req.file.filename });
     let user = await User.findOneAndUpdate(
       { _id },
-      { imageUrl: image.filename },
+      {
+        imageUrl: `https://api-blog-mern-app.herokuapp.com/api/images/show/${image.filename}`,
+      },
       {
         new: true,
       }
