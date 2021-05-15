@@ -52,6 +52,7 @@ GET_BLOG_BY_ID: {
         .populate({
           path: "userId",
           select: "-password -blogs",
+          populate: { path: "comments.userId" },
         })
         .populate({ path: "comments.userId", select: "-password -blogs" });
 
