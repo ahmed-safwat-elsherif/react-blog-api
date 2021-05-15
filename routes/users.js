@@ -93,9 +93,10 @@ PROFILE: {
   router.get("/user/:_id", async (req, res) => {
     try {
       const { _id } = req.params;
-      const user = await User.findOne({ _id })
-        .populate("blogs")
-        .populate("userId");
+      const user = await User.findOne({ _id }).populate({
+        path: "blogs",
+        populate: { path: "userId" },
+      });
       res.status(200).send({
         success: true,
         user,
