@@ -99,6 +99,7 @@ router.get("/show/:filename", (req, res) => {
     if (!file[0] || file[0].length === 0) {
       return res.status(404).send({ err: "No file exists" });
     }
+    console.log(file);
     if (
       file[0].contentType === "image/jpeg" ||
       file[0].contentType === "img/png"
