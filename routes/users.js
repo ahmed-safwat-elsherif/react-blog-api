@@ -66,6 +66,7 @@ LOGIN: {
 }
 
 PROFILE: {
+  // get profile data
   router.get("/profile", authenticate, async (req, res) => {
     try {
       const user = await User.findOne({ _id: req.signData._id }).populate(
@@ -87,12 +88,13 @@ PROFILE: {
       });
     }
   });
+  // Get any user with id
   router.get("/user/:_id", async (req, res) => {
     try {
       const { _id } = req.params;
       const user = await User.findOne({ _id })
         .populate("blogs")
-        .populate("userId");
+        .populate("blogs.userId");
       res.status(200).send({
         success: true,
         user,
