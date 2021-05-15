@@ -1,5 +1,4 @@
 const express = require("express");
-import Blog from "./../../src/components/Blog";
 const router = express.Router();
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -70,9 +69,10 @@ PROFILE: {
   // get profile data
   router.get("/profile", authenticate, async (req, res) => {
     try {
-      const user = await User.findOne({ _id: req.signData._id }).populate(
-        "blogs"
-      );
+      const user = await User.findOne({ _id: req.signData._id }).populate({
+        path: "blogs",
+        populate: { path: "userId" },
+      });
       console.log(user);
       res.status(200).send({
         success: true,
@@ -93,10 +93,9 @@ PROFILE: {
   router.get("/user/:_id", async (req, res) => {
     try {
       const { _id } = req.params;
-      const user = await User.findOne({ _id }).populate({
-        path: "blogs",
-        populate: { path: "userId" },
-      });
+      const user = await User.findOne({ _id })
+        .populate("blogs")
+        .populate("userId");
       res.status(200).send({
         success: true,
         user,
