@@ -3,7 +3,7 @@ const app = express();
 const methodOverride = require("method-override");
 const dotenv = require("dotenv");
 dotenv.config();
-console.log(process.env);
+
 const users = require("./routes/users");
 const blogs = require("./routes/blogs");
 const images = require("./routes/images");
