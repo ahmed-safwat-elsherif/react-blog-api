@@ -222,7 +222,7 @@ COMMENTS: {
     try {
       let { comment, _id } = req.body;
       let blogQuery = await Blog.findOne({ _id });
-      console.log(blogQuery);
+      console.log(blogQuery, _id);
       console.log({
         text: `-----------------------------------------------------------------------------`,
       });
