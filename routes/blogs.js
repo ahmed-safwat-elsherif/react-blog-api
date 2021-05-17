@@ -232,12 +232,14 @@ COMMENTS: {
         comment,
       });
       console.log(blogQuery);
-      let blog = await blogQuery.save().populate({
-        path: "userId",
-        select: "-password -blogs",
-        populate: { path: "comments.userId" },
-      });
-
+      await blogQuery.save();
+      const blog = await Blog.findOne({ _id })
+        .populate({
+          path: "userId",
+          select: "-password -blogs",
+          populate: { path: "comments.userId" },
+        })
+        .populate({ path: "comments.userId", select: "-password -blogs" });
       console.log(blog);
       res
         .status(200)
