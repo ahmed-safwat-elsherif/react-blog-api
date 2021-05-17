@@ -239,7 +239,7 @@ COMMENTS: {
           populate: { path: "comments.userId" },
         })
         .populate({ path: "comments.userId", select: "-password -blogs" });
-      console.log("new update(comment added):--->", blog);
+      console.log("Success updated)");
       res
         .status(200)
         .send({ success: true, message: "Comment added successfully", blog });
