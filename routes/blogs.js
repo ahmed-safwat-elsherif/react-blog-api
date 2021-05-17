@@ -150,7 +150,6 @@ GET_USERS_BLOGS: {
 UPDATE_BLOG: {
   router.patch("/update/blog", authenticate, async (req, res) => {
     try {
-      let { id } = req.params;
       let { _id, userId, ...updates } = req.body;
       let blog = await Blog.findByIdAndUpdate(
         { _id },
@@ -233,7 +232,12 @@ COMMENTS: {
         comment,
       });
       console.log(blogQuery);
-      let blog = await blogQuery.save();
+      let blog = await blogQuery.save().populate({
+        path: "userId",
+        select: "-password -blogs",
+        populate: { path: "comments.userId" },
+      });
+
       console.log(blog);
       res
         .status(200)

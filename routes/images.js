@@ -77,7 +77,9 @@ router.post(
       let date = new Date(image.uploadDate);
       let blog = await Blog.findOneAndUpdate(
         { _id: blogId },
-        { imageUrl: image.filename },
+        {
+          imageUrl: `https://api-blog-mern-app.herokuapp.com/api/images/show/${image.filename}`,
+        },
         {
           new: true,
         }

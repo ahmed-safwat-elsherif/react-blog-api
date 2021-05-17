@@ -8,24 +8,16 @@ const users = require("./routes/users");
 const blogs = require("./routes/blogs");
 const images = require("./routes/images");
 const config = require("./config/config");
-const bodyParser = require("body-parser");
 
 DatabaseConnection: {
   require("./db-connection");
 }
+
 app.use(
   express.json({
     limit: "50mb",
   })
 );
-
-// app.use(
-//   bodyParser.urlencoded({
-//     limit: "50mb",
-//     parameterLimit: 100000,
-//     extended: true,
-//   })
-// );
 
 app.use(
   express.urlencoded({
@@ -51,10 +43,10 @@ IntialRoute: {
 Logging: {
   app.use((req, res, next) => {
     try {
-      console.log({ time: new Date(), url: req.url, method: req.method });
+      ({ time: new Date(), url: req.url, method: req.method });
       next();
     } catch (error) {
-      console.log({ error: "Logging error" });
+      ({ error: "Logging error" });
       next(error);
     }
   });
@@ -75,5 +67,5 @@ ErrorHandler: {
 const port = config.port;
 
 app.listen(port, () => {
-  console.log(`server is listening on port: ${port}`);
+  `server is listening on port: ${port}`;
 });
