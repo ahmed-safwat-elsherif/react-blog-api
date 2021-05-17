@@ -231,8 +231,7 @@ COMMENTS: {
         userId: req.signData._id,
         comment,
       });
-      console.log(blogQuery);
-      await blogQuery.save();
+      let res = await blogQuery.save();
       const blog = await Blog.findOne({ _id })
         .populate({
           path: "userId",
