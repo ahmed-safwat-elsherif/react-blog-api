@@ -232,7 +232,7 @@ COMMENTS: {
         comment,
       });
       let res = await blogQuery.save();
-      const blog = await Blog.findOne({ _id })
+      let blog = await Blog.findOne({ _id })
         .populate({
           path: "userId",
           select: "-password -blogs",
