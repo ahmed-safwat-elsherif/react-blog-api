@@ -97,10 +97,11 @@ POST_NEW_BLOG: {
   router.post("/new", authenticate, async (req, res) => {
     try {
       let userId = req.signData._id;
-      let { title, body, tags = [] } = req.body;
+      let { title, body, tags = [], imageUrl = "" } = req.body;
       let blog = await Blog.create({
         userId,
         tags,
+        imageUrl,
         title,
         body,
         likes: [],
