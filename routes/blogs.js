@@ -3,7 +3,7 @@ const { authenticate } = require("../auth/user.auth");
 const { deleteOne, findOneAndUpdate } = require("../models/blogModel");
 const Blog = require("../models/blogModel");
 const User = require("../models/userModel");
-const { route } = require("./users");
+
 const router = express.Router();
 
 GET_COUNT_OF_BLOGS: {
@@ -47,7 +47,6 @@ GET_BLOG_BY_ID: {
   router.get("/blog/:_id", async (req, res) => {
     try {
       let { _id } = req.params;
-      console.log("selected blog id: ", _id);
       const blog = await Blog.findOne({ _id })
         .populate({
           path: "userId",
@@ -57,7 +56,7 @@ GET_BLOG_BY_ID: {
         .populate({ path: "comments.userId", select: "-password -blogs" });
 
       if (!blog) throw "Unabled to find blog to display";
-      console.log(blog);
+
       res.status(200).send({ success: true, blog });
     } catch (error) {
       res.status(401).send({
@@ -222,16 +221,13 @@ COMMENTS: {
     try {
       let { comment, _id } = req.body;
       let blogQuery = await Blog.findOne({ _id });
-      console.log(blogQuery, _id);
-      console.log({
-        text: `-----------------------------------------------------------------------------`,
-      });
+
       blogQuery.comments.push({
         isUserDeleted: false,
         userId: req.signData._id,
         comment,
       });
-      let res = await blogQuery.save();
+      let result = await blogQuery.save();
       let blog = await Blog.findOne({ _id })
         .populate({
           path: "userId",
@@ -239,7 +235,6 @@ COMMENTS: {
           populate: { path: "comments.userId" },
         })
         .populate({ path: "comments.userId", select: "-password -blogs" });
-      console.log("Success updated)");
       res
         .status(200)
         .send({ success: true, message: "Comment added successfully", blog });
@@ -250,28 +245,29 @@ COMMENTS: {
     }
   });
   router
-    .route("/comments/delete/:_id")
+    .route("/blog/:blogId/comments/delete/:_id")
     .delete(authenticate, async (req, res) => {
       try {
-        let { blogId } = req.body;
-        let { _id } = req.params;
-        let blog = await Blog.findById({ _id: blogId });
-        let newComments = blog.comments.filter((c) => c._id == _id);
-        if (newComments.length == blog.comments.length) {
-          console.log("exists");
-          let updatedBlog = await blog.save();
-          return res.status(200).send({
-            success: true,
-            message: "Item doesn't exist or may have been deleted",
-            blog: updatedBlog,
-          });
-        }
-        blog.comments = [...newComments];
-        let updatedBlog = await blog.save();
+        let { _id, blogId } = req.params;
+
+        let blog = await Blog.findByIdAndUpdate(
+          { _id: blogId },
+          {
+            $pull: { comments: { _id } },
+          },
+          { new: true }
+        )
+          .populate({
+            path: "userId",
+            select: "-password -blogs",
+            populate: { path: "comments.userId" },
+          })
+          .populate({ path: "comments.userId", select: "-password -blogs" });
+
         res.status(200).send({
           success: true,
           message: "deleted successfully",
-          blog: updatedBlog,
+          blog,
         });
       } catch (error) {
         res

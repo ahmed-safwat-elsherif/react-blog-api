@@ -11,7 +11,6 @@ REGISTER: {
     try {
       const { email, password, firstname, lastname, imageUrl = "" } = req.body;
       let exists = await User.findOne({ email });
-      console.log("exists", exists);
       if (exists) {
         return res
           .status(200)
@@ -73,7 +72,6 @@ PROFILE: {
         path: "blogs",
         populate: { path: "userId" },
       });
-      console.log(user);
       res.status(200).send({
         success: true,
         user,
@@ -118,7 +116,6 @@ DELETE_PATCH: {
     .route("/")
     .patch(authenticate, async (req, res) => {
       try {
-        console.log("noow");
         let updates = req.body;
         const { password } = await User.findById({ _id: req.signData._id });
 
@@ -161,7 +158,6 @@ CHANGE_PASSWORD: {
       let user = await User.findOne({ _id });
       /** compare the old password */
       const isPassRight = await bcrypt.compare(password, user.password);
-      console.log(isPassRight, "\n");
       if (!isPassRight) throw "credentials is not correct";
 
       /** hashing the new password */

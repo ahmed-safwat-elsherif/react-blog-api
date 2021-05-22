@@ -67,5 +67,5 @@ ErrorHandler: {
 const port = config.port;
 
 app.listen(port, () => {
-  `server is listening on port: ${port}`;
+  console.log(`server is listening on port: ${port}`);
 });
