@@ -64,7 +64,7 @@ router.post("/user", authenticate, upload.single("image"), async (req, res) => {
   }
 });
 
-// POST the product image
+// POST the blog image
 router.post(
   "/blog/:blogId",
   authenticate,
